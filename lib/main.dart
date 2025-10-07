@@ -113,15 +113,46 @@ class ShopPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //watch
-    //final cartCount = context.watch<CartModel>().count;
+    final cartCount = context.watch<CartModel>().count;
 
     return Scaffold(
       appBar: AppBar(
         title: const Text("Shop"),
         actions: [
           IconButton(
+            tooltip: "Warenkorb öffnen",
             onPressed: () => _openCart(context),
-            icon: Icon(Icons.shopping_cart),
+            icon: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                const Icon(Icons.shopping_cart),
+                if (cartCount > 0)
+                  Positioned(
+                    right: -6,
+                    top: -6,
+                    child: Container(
+                      padding: const EdgeInsets.all(2),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      constraints: const BoxConstraints(
+                        minHeight: 18,
+                        minWidth: 18,
+                      ),
+                      child: Center(
+                        child: Text(
+                          "$cartCount",
+                          style: const TextStyle(
+                            fontSize: 11,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
           ),
         ],
       ),
@@ -140,6 +171,15 @@ class ShopPage extends StatelessWidget {
             ),
           );
         },
+      ),
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+          child: FilledButton(
+            onPressed: () => _openCart(context),
+            child: const Text("Zum Warenkorb"),
+          ),
+        ),
       ),
     );
   }
@@ -165,6 +205,10 @@ class CartPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        scrolledUnderElevation: 0,
+        backgroundColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
         title: const Text("Warenkorb"),
         actions: [
           if (cart.count > 0)
@@ -177,20 +221,47 @@ class CartPage extends StatelessWidget {
 
       body: cart._items.isEmpty
           ? const Center(child: Text("Warenkorb ist leer"))
-          : ListView.builder(
-              itemCount: cart.items.length,
-              itemBuilder: (_, i) {
-                final item = cart._items[i];
-                return ListTile(
-                  title: Text(item.name),
-                  subtitle: Text("${item.price.toStringAsFixed(2)} €"),
-                  trailing: IconButton(
-                    onPressed: () => context.read<CartModel>().removeAt(i),
-                    icon: const Icon(Icons.delete),
-                  ),
-                );
-              },
+          : ScrollConfiguration(
+              behavior: ScrollConfiguration.of(
+                context,
+              ).copyWith(overscroll: false),
+              child: ListView.builder(
+                itemCount: cart.items.length,
+                itemBuilder: (_, i) {
+                  final item = cart._items[i];
+                  return ListTile(
+                    title: Text(item.name),
+                    subtitle: Text("${item.price.toStringAsFixed(2)} €"),
+                    trailing: IconButton(
+                      onPressed: () => context.read<CartModel>().removeAt(i),
+                      icon: const Icon(Icons.delete),
+                    ),
+                  );
+                },
+              ),
             ),
+      bottomNavigationBar: SafeArea(
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  "Summe: ${cart.total.toStringAsFixed(2)} €",
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              FilledButton(
+                onPressed: cart.count == 0 ? null : () {},
+                child: Text("Zur Kasse"),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
