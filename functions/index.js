@@ -1,5 +1,5 @@
 const functions = require('firebase-functions');
-const stripe = require('stripe')('sk_test_51SESH5GK66huHpO8GiizpQkbJMMZTabijXbiFkj7PWb1L6YSeIyZIZAllJbs2evfosdxRUIxUi9NHhnTIJ1CgkiF00ahE9NOnN');
+const stripe = require('stripe')('sk_test_DEIN_KEY_HIER');
 
 exports.createPaymentIntent = functions.https.onCall(async (data, context) => {
     try {

@@ -3,8 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:provider_cart/features/cart/providers/cart_provider.dart';
 import 'package:provider_cart/features/cart/providers/discount_provider.dart';
 import 'package:provider_cart/features/cart/widgets/discount_input.dart';
+import 'package:provider_cart/features/checkout/checkout_page.dart';
 import 'package:provider_cart/features/shop/providers/inventory_provider.dart';
-import 'package:provider_cart/main.dart';
+//import 'package:provider_cart/main.dart';
 
 class CartPage extends StatelessWidget {
   const CartPage({super.key});
@@ -122,7 +123,17 @@ class CartPage extends StatelessWidget {
                     ),
                   ),
                   FilledButton(
-                    onPressed: cart.count == 0 ? null : () {},
+                    onPressed: cart.count == 0
+                        ? null
+                        : () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const CheckoutPage(), // Zum Checkout
+                              ),
+                            );
+                          },
                     child: const Text("Zur Kasse"),
                   ),
                 ],

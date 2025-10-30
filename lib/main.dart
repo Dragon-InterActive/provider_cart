@@ -13,6 +13,10 @@ import 'package:provider_cart/features/cart/providers/cart_provider.dart';
 import 'package:provider_cart/features/cart/providers/discount_provider.dart';
 import 'package:provider_cart/features/shop/providers/inventory_provider.dart';
 import 'package:provider_cart/features/shop/screens/shop_page.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
+import 'firebase_options.dart';
+import 'package:provider_cart/config/stripe_config.dart';
 
 // ---------------------------------------------------------------------------
 // 1) Provider Setup
@@ -21,7 +25,13 @@ import 'package:provider_cart/features/shop/screens/shop_page.dart';
 // - MyApp → MaterialApp mit Shop-Seite als Startpunkt
 // ---------------------------------------------------------------------------
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  Stripe.publishableKey = StripeConfig.publishableKey;
+
   runApp(
     MultiProvider(
       providers: [

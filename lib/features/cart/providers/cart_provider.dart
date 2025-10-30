@@ -18,7 +18,9 @@ class CartModel extends ChangeNotifier {
     (sum, it) => sum + it.qty,
   ); //Summe weil Mengenangabe
   double get subtotal =>
-      _byName.values.fold(0.0, (sum, it) => (it.product.price * it.qty));
+      //_byName.values.fold(0.0, (sum, it) => (it.product.price * it.qty));
+      _byName.values.fold(0.0, (sum, it) => sum + (it.product.price * it.qty));
+  //fold addiert nicht auf den vorherigen Wert sonden gibt nur den letzten zurück.
   double get total => subtotal; //wird mit Discount verrechenet
 
   //Schreibzugriff

@@ -18,4 +18,10 @@ class DiscountModel extends ChangeNotifier {
   }
 
   double discountedTotal(double subtotal) => subtotal * (1 - _percent);
+
+  void clear() {
+    // Discount zurücksetzen nach erfolgreicher Zahlung
+    _percent = 0;
+    notifyListeners();
+  }
 }
